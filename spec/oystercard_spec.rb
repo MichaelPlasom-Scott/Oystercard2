@@ -4,6 +4,7 @@ describe Oystercard do
 
   let(:entry_station){ double :station }
   let(:exit_station){ double :station }
+  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
 
   it 'should have a balance of 0' do
     expect(subject.balance).to eq(0)
@@ -60,11 +61,21 @@ describe Oystercard do
       subject.touch_out(exit_station)
       expect(subject.exit_station).to eq exit_station
     end
+      
+    it 'stores a journey' do
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      expect(subject.journeys).to include journey
+    end
 
   end
 
   it 'will require £1 to touch in' do
     expect{subject.touch_in(entry_station)}.to raise_error "Insufficient funds to touch in"
   end 
+
+  it 'has an empty list of journeys by default' do
+    expect(subject.journeys).to be_empty
+  end
 
 end
